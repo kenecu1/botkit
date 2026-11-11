@@ -5,3 +5,8 @@ __pycache__/
 botkit.db
 status.jsonl
 .worktrees/
+.pytest_cache/
+.ruff_cache/
+*.db
+.env
+.claude/settings.local.json
