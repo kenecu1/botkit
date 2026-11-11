@@ -2,7 +2,8 @@
 
 <p align="center">
   <b>Let AI tools build software while a human stays in charge.</b><br>
-  Claude builds a ticket. Tests judge it. ChatGPT reviews it. I approve and commit.
+  Claude builds a ticket. Tests judge it. ChatGPT reviews it. I approve and commit.<br>
+  <sub>An agent harness and an evaluation harness for AI coding tools, written from scratch in Python.</sub>
 </p>
 
 <p align="center">
@@ -14,6 +15,7 @@
 
 <p align="center">
   <a href="#the-problem">Problem</a> ·
+  <a href="#what-this-project-covers">Skills</a> ·
   <a href="#how-it-works">How it works</a> ·
   <a href="#examples">Examples</a> ·
   <a href="#why-i-designed-it-this-way">Thought process</a> ·
@@ -37,18 +39,19 @@
 
 1. [The problem](#the-problem)
 2. [The idea](#the-idea)
-3. [How it works](#how-it-works)
-4. [Examples](#examples)
-5. [Why I designed it this way](#why-i-designed-it-this-way)
-6. [Safety](#safety)
-7. [Keeping myself in the loop](#keeping-myself-in-the-loop)
-8. [The experiment](#the-experiment)
-9. [Architecture](#architecture)
-10. [Tools](#tools)
-11. [Status](#status)
-12. [Run it](#run-it)
-13. [Repo map](#repo-map)
-14. [Limits](#limits)
+3. [What this project covers](#what-this-project-covers)
+4. [How it works](#how-it-works)
+5. [Examples](#examples)
+6. [Why I designed it this way](#why-i-designed-it-this-way)
+7. [Safety](#safety)
+8. [Keeping myself in the loop](#keeping-myself-in-the-loop)
+9. [The experiment](#the-experiment)
+10. [Architecture](#architecture)
+11. [Tools](#tools)
+12. [Status](#status)
+13. [Run it](#run-it)
+14. [Repo map](#repo-map)
+15. [Limits](#limits)
 
 ## The problem
 
@@ -75,6 +78,42 @@ Botkit is a small Python orchestrator. It moves one ticket through a fixed set o
 Botkit is also my final project for CSE 4705 (Intro to AI) at UConn. The same pipeline runs an experiment that answers one question:
 
 > Of the bugs that slip past tests, how many does an AI reviewer catch, at what false alarm cost, and does ChatGPT catch more than Claude?
+
+## What this project covers
+
+Everything below is in the design today. The [status](#status) list shows which parts are built.
+
+**AI engineering**
+
+| Skill | Where it is in Botkit |
+|---|---|
+| Agent harness | The scheduler, the runners, and the limits around each bot: tools allowed, time, cost, and what it can see |
+| Multi agent orchestration | A builder and a reviewer with separate roles, separate context, and a fixed handoff between them |
+| Prompt engineering | Versioned prompt files for each bot. Every prompt change is logged with the failure that caused it |
+| Structured output | Both reviewers must answer in one JSON Schema, and the code rejects anything else |
+| LLM evaluation | A labeled dataset, blinded runs, repeated trials, and catch rate, precision, and false alarm rate |
+| LLM as judge | The reviewer is the judge being tested, scored against hidden tests as ground truth |
+| Guardrails | Command deny rules, a commit check after every build, a queue cap, and a cost cap |
+| Prompt injection defense | Text inside a diff is treated as data, and the reviewer runs read only with no personal settings |
+| Human in the loop | Every commit is mine. In a later phase, a bot that is stuck can ask me a question on my phone |
+| Cost and token tracking | Tokens and dollar cost saved for every model call |
+
+**Software engineering**
+
+| Skill | Where it is in Botkit |
+|---|---|
+| Python | The whole program, standard library only, with typed dataclasses, enums, and Protocol interfaces |
+| System design | Ten small parts with one job each, and shared contracts written before any part |
+| State machines | Twelve ticket stages with every allowed move in one table |
+| Reliability | Idempotent submits, retries with backoff, crash recovery on startup, and a dead letter table |
+| SQL and data modeling | Six SQLite tables for tickets, runs, events, findings, questions, and dead letters |
+| Testing | pytest, with fake bots so that no test ever calls a model or the network |
+| CI | GitHub Actions runs ruff and pytest on every push and pull request |
+| Git | Worktrees, branches, and diffs driven from code, and a pull request workflow |
+| Process control | Running other programs with timeouts, and stopping a whole process tree on Windows |
+| Observability | One log line per step, a full event history per ticket, and a status page in a later phase |
+| Concurrency | Two builders in parallel through a thread pool, in a later phase |
+| Command line tools | An `argparse` interface with a defined exit code for every outcome |
 
 ## How it works
 
@@ -220,7 +259,7 @@ I spent the design phase on decisions before writing code, so that building woul
 |---|---|---|
 | The reviewer is a different model family from the builder | Claude reviewing Claude | I wanted a second opinion that does not share the builder's habits. Whether that actually helps is an open question, and the experiment is how I find out |
 | Tests judge, the reviewer only advises | Letting a review block a ticket outright | Reviewers raise false alarms. A false alarm should cost me a minute of reading, not kill working code |
-| A plain Python script runs the loop | An agent framework | I want to understand every part. The whole program uses the standard library, with pytest and ruff as the only dev dependencies |
+| Orchestration written by hand in plain Python | An agent framework such as LangChain or LangGraph | Botkit drives two finished command line agents, not raw model APIs, so there is little for a framework to wrap. Writing the state machine, retries, and storage myself is also how I learn what those frameworks do underneath. The whole program uses the standard library, with pytest and ruff as the only dev dependencies |
 | The reviewer sees only the spec and the diff | Passing it the builder's explanation too | The builder's own account could talk the reviewer into agreeing. Less context keeps the review independent |
 | Bots never commit or push | Automatic merge after a passing review | I stay accountable for every line in history. A commit is my signature that I read and understood the change |
 | One git worktree per ticket | Building in my main checkout | A bot cannot disturb my working files, and separate folders make parallel tickets possible later |
