@@ -40,7 +40,7 @@ DESIGN TERMS:
 | pytest and ruff | Tests and lint | The only dev dependencies. Commands: `pytest` and `ruff check .` |
 | Git worktrees | One isolated folder per ticket | `git worktree add` |
 | Claude Code, model Opus 5.5 (`claude-opus-5-5`) | Builder. Also the Claude reviewer in the experiment | Headless: `claude -p`. Needs version 2.1.259 or newer |
-| Codex CLI, model GPT-6.1 Sol (`gpt-6.1-sol`) | Reviewer | Headless: `codex exec`. Same tier as Opus 5.5 by lineup position |
+| Codex CLI, model GPT-6.1 Sol (`gpt-6.1-sol`) *gpt-6-luna used as of now until api key is set towards end* | Reviewer | Headless: `codex exec`. Same tier as Opus 5.5 by lineup position |
 | SQLite | Saved state | One file |
 | PowerShell | `install.ps1` | Kenny's machine is Windows |
 | ntfy | Phone messages | Phase 3 only |
