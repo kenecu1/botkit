@@ -1,5 +1,7 @@
 # Botkit
 
+[![CI](https://github.com/kenecu1/botkit/actions/workflows/ci.yml/badge.svg)](https://github.com/kenecu1/botkit/actions/workflows/ci.yml)
+
 A small Python orchestrator that lets AI tools build software safely. Claude builds a ticket, tests run, a ChatGPT model reviews the change, everything is saved, and a human approves and commits. The bots never commit or push.
 
 Botkit is also my final project for CSE 4705 (Intro to AI) at UConn, where it runs an experiment: **of the bugs that slip past tests, how many does an AI reviewer catch, at what false alarm cost, and does ChatGPT catch more than Claude?**
