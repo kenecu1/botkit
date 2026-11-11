@@ -1,0 +1,14 @@
+# Defaults from docs/design.md. Change here, not in code.
+home = "~/.botkit"
+fix_retry_max = 2
+agent_error_retry_max = 3
+backoff_seconds = [30, 60, 120]
+builder_timeout_s = 1200
+reviewer_timeout_s = 600
+builder_max_budget_usd = 5.00
+queue_cap_unreviewed = 2
+max_parallel_builders = 1
+max_findings = 5
+question_budget_per_ticket = 1
+builder_model = "claude-opus-5-5"
+reviewer_model = "gpt-6.1-sol"  # same tier as Opus 5.5; confirm the name on day 1
