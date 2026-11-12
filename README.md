@@ -16,9 +16,9 @@
 <p align="center">
   <a href="#the-problem">Problem</a> ·
   <a href="#how-it-works">How it works</a> ·
-  <a href="#design-decisions">Design decisions</a> ·
-  <a href="#what-this-project-demonstrates">Skills</a> ·
   <a href="#the-experiment">Experiment</a> ·
+  <a href="#design-decisions">Thought process</a> ·
+  <a href="#what-this-project-demonstrates">Skills</a> ·
   <a href="#status">Status</a> ·
   <a href="docs/design.md">Full design</a>
 </p>
@@ -84,32 +84,6 @@ A run ends in exactly one of four outcomes.
 | `VIOLATION` | The agent committed, moved a ref, changed git config, or touched the real repo |
 | `ERROR` | A tool crashed, timed out, hit a usage limit, or changed nothing |
 
-## Design decisions
-
-These are the choices I would walk through in an interview. The complete design is in [`docs/design.md`](docs/design.md) and the dated log is in [`DECISIONS.md`](DECISIONS.md).
-
-1. **Isolation by construction, not by instruction.** A git worktree shares refs and remotes with the real repo, so an agent commit lands in the real repository. A separate clone with its remote removed makes a push impossible and keeps commits out of my history. My first design used worktrees, and a review of it showed the gap.
-2. **Detection as a pure function.** The guard compares two snapshots (HEAD, every ref, reflog length, a hash of the git config) and returns a list of violations. No state, easy to test, easy to explain.
-3. **Tests decide, and the tests are protected.** The agent can read the tests but cannot change the verdict by editing them, because Botkit restores them before the deciding run.
-4. **Limits expressed as data shapes.** The reviewer cannot block a merge because its output has no path to the outcome field. The rule lives in the structure, not in a comment.
-5. **No database and no saved state machine.** A run is a folder of files and the verdict file is written last. A folder without one is an unfinished run. I cut a database, a twelve stage state machine and automatic retries from the first design because no hard requirement needed them.
-6. **I write the parts I must be able to defend.** The shared data shapes, the guard and the experiment scorer are written by hand. `botkit run` refuses those tickets, and `botkit review` puts my code through the same tests and reviewer. Everything the agent builds needs my written explanation before it merges.
-7. **Tests never call a real model or the network.** The agent adapters receive their subprocess runner as a parameter. Tests pass in a fake that replays recorded outputs.
-8. **Minimal dependencies.** Python standard library only, with pytest as the single dev dependency.
-
-## What this project demonstrates
-
-| Skill | Where it shows up |
-|---|---|
-| System design | Isolation model, threat model, four outcome lifecycle, failure handling table, a written cut list |
-| AI agent tooling | Headless Claude Code and Codex CLI, structured output with JSON Schema, prompt and context control |
-| Guardrails | Clone with no remote, git state guard, protected tests, prompt injection rule for the reviewer |
-| Git internals | Refs, reflog, clones, remotes and patches used as safety mechanisms |
-| Testing discipline | Test first tickets, protected tests, fakes in place of live models, CI on every push |
-| Evaluation and statistics | Blinded paired design, hidden tests as ground truth, confidence intervals, exact McNemar test |
-| Python | Standard library only: `subprocess`, `dataclasses`, `tomllib`, `hashlib`, `pathlib`, `argparse` |
-| Engineering judgment | Two full design reviews, and a record of what was removed and why |
-
 ## The experiment
 
 **Question.** Of the bugs that pass the visible tests, how many does an AI reviewer catch, at what false alarm cost, and does one vendor's reviewer catch more than the other's?
@@ -125,6 +99,37 @@ These are the choices I would walk through in an interview. The complete design 
 **What gets reported.** Catch rate and false alarm rate per reviewer with 95% intervals, stability across repeated runs, a paired comparison labeled exploratory, and the minutes each false alarm cost me.
 
 **Results.** Pending. Numbers will be posted here once the runs are complete, together with the threats to validity.
+
+## Design decisions
+
+This is my thought process behind the main choices. The complete design is in [`docs/design.md`](docs/design.md) and the dated log is in [`DECISIONS.md`](DECISIONS.md).
+
+<details>
+<summary><b>Show the eight decisions</b></summary>
+
+1. **Isolation by construction, not by instruction.** A git worktree shares refs and remotes with the real repo, so an agent commit lands in the real repository. A separate clone with its remote removed makes a push impossible and keeps commits out of my history. My first design used worktrees, and a review of it showed the gap.
+2. **Detection as a pure function.** The guard compares two snapshots (HEAD, every ref, reflog length, a hash of the git config) and returns a list of violations. No state, easy to test, easy to explain.
+3. **Tests decide, and the tests are protected.** The agent can read the tests but cannot change the verdict by editing them, because Botkit restores them before the deciding run.
+4. **Limits expressed as data shapes.** The reviewer cannot block a merge because its output has no path to the outcome field. The rule lives in the structure, not in a comment.
+5. **No database and no saved state machine.** A run is a folder of files and the verdict file is written last. A folder without one is an unfinished run. I cut a database, a twelve stage state machine and automatic retries from the first design because no hard requirement needed them.
+6. **I write the parts I must be able to defend.** The shared data shapes, the guard and the experiment scorer are written by hand. `botkit run` refuses those tickets, and `botkit review` puts my code through the same tests and reviewer. Everything the agent builds needs my written explanation before it merges.
+7. **Tests never call a real model or the network.** The agent adapters receive their subprocess runner as a parameter. Tests pass in a fake that replays recorded outputs.
+8. **Minimal dependencies.** Python standard library only, with pytest as the single dev dependency.
+
+</details>
+
+## What this project demonstrates
+
+| Skill | Where it shows up |
+|---|---|
+| System design | Isolation model, threat model, four outcome lifecycle, failure handling table, a written cut list |
+| AI agent tooling | Headless Claude Code and Codex CLI, structured output with JSON Schema, prompt and context control |
+| Guardrails | Clone with no remote, git state guard, protected tests, prompt injection rule for the reviewer |
+| Git internals | Refs, reflog, clones, remotes and patches used as safety mechanisms |
+| Testing discipline | Test first tickets, protected tests, fakes in place of live models, CI on every push |
+| Evaluation and statistics | Blinded paired design, hidden tests as ground truth, confidence intervals, exact McNemar test |
+| Python | Standard library only: `subprocess`, `dataclasses`, `tomllib`, `hashlib`, `pathlib`, `argparse` |
+| Engineering judgment | Two full design reviews, and a record of what was removed and why |
 
 ## Status
 
