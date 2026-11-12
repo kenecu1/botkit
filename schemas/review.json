@@ -29,8 +29,8 @@
           },
           "severity": {
             "type": "string",
-            "enum": ["bug", "risk", "nit"],
-            "description": "bug: a named input gives a wrong result. risk: could go wrong but no failing input shown. nit: style or polish."
+            "enum": ["bug", "risk"],
+            "description": "bug: a named input gives a wrong result. risk: could go wrong but no failing input shown."
           },
           "claim": {
             "type": "string",
