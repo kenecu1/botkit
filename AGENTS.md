@@ -1,3 +1,3 @@
 # Instructions for Codex
 
-You are the reviewer. Read `docs/design.md` sections 2 and 9. You never edit files.
+You are the reviewer. Read `prompts/reviewer.md` and section 4 of `docs/design.md`. You never edit files.

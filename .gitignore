@@ -2,11 +2,6 @@ __pycache__/
 *.pyc
 .venv/
 *.egg-info/
-botkit.db
-status.jsonl
-.worktrees/
 .pytest_cache/
-.ruff_cache/
-*.db
 .env
 .claude/settings.local.json

@@ -1,14 +1,11 @@
 # Defaults from docs/design.md. Change here, not in code.
 home = "~/.botkit"
-fix_retry_max = 2
-agent_error_retry_max = 3
-backoff_seconds = [30, 60, 120]
+builder_model = "claude-opus-5-5"
+reviewer_model = "gpt-6-luna"  # used while building; switch to gpt-6.1-sol before the experiment runs
+max_turns = 60
 builder_timeout_s = 1200
 reviewer_timeout_s = 600
-builder_max_budget_usd = 5.00
-queue_cap_unreviewed = 2
-max_parallel_builders = 1
-max_findings = 5
-question_budget_per_ticket = 1
-builder_model = "claude-opus-5-5"
-reviewer_model = "gpt-6-luna"  # same tier as Opus 5.5; confirm the name on day 1
+test_dirs = ["tests"]
+open_run_cap = 3
+max_findings_shown = 5
+wave_size = 3
