@@ -1,0 +1,47 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["summary", "findings"],
+  "properties": {
+    "summary": {
+      "type": "string",
+      "description": "One or two sentences on the change and what you found."
+    },
+    "findings": {
+      "type": "array",
+      "description": "Zero findings is a valid review.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["file", "line_start", "line_end", "severity", "claim", "evidence"],
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "Path of the changed file."
+          },
+          "line_start": {
+            "type": "integer",
+            "description": "First line of the problem in that file."
+          },
+          "line_end": {
+            "type": "integer",
+            "description": "Last line of the problem. Same as line_start for one line."
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["bug", "risk", "nit"],
+            "description": "bug: a named input gives a wrong result. risk: could go wrong but no failing input shown. nit: style or polish."
+          },
+          "claim": {
+            "type": "string",
+            "description": "One sentence saying what is wrong."
+          },
+          "evidence": {
+            "type": "string",
+            "description": "The code, the input or state, and the wrong result."
+          }
+        }
+      }
+    }
+  }
+}
