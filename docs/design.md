@@ -211,6 +211,7 @@ Status page, built right after the MVP (original, simplified):
 4. A run with no `verdict.json` and no new step line for longer than the timeout shows as unfinished.
 5. Standard library only: one string template, no server, no script framework. Tests feed it fixture run folders.
 6. The page is read only. It never starts, stops or merges anything.
+7. Hand written commits carry my name only, code written by bot are co authored
 
 Learning:
 
