@@ -5,3 +5,4 @@ __pycache__/
 .pytest_cache/
 .env
 .claude/settings.local.json
+tests/fixtures/raw/
