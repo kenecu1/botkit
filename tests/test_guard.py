@@ -2,10 +2,17 @@ from dataclasses import replace
 
 import pytest
 
-from botkit.guard import compare
+from botkit.guard import compare, _git, take_snapshot
 from botkit.shapes import Snapshot
 
 BASE = Snapshot("/repo", "abc", {"main": "abc"}, 7, "f00")
+
+def make_repo(path):
+    _git(path, ["init", "-q"])
+    (path / "a.txt").write_text("hello")
+    _git(path, ["add", "a.txt"])
+    _git(path, ["-c", "user.name=Test", "-c", "user.email=test@example.com",
+                "commit", "-q", "-m", "base"])
 
 
 def test_identical_snapshots_have_no_violations():
@@ -65,5 +72,62 @@ def test_three_changes_are_three_violations():
     problems = compare(BASE, after)
 
     assert len(problems) == 3
+
+
+def test_no_violations(tmp_path):
+    make_repo(tmp_path)
+    before = take_snapshot(str(tmp_path))
+
+    after = take_snapshot(str(tmp_path))
+    problems = compare(before, after)
+
+    assert problems == []
+
+
+def test_new_commit_is_caught(tmp_path):
+    make_repo(tmp_path)
+    before = take_snapshot(str(tmp_path))
+
+    (tmp_path / "a.txt").write_text("changed")
+    _git(tmp_path, ["-c", "user.name=Test", "-c", "user.email=test@example.com",
+                "commit", "-q", "-am", "change"])
+    
+    after = take_snapshot(str(tmp_path))
+    problems = compare(before, after)
+
+    assert len(problems) == 3
+    assert any("HEAD" in p for p in problems)
+
+
+def test_commit_reset_is_caught(tmp_path):
+    make_repo(tmp_path)
+    before = take_snapshot(str(tmp_path))
+
+    (tmp_path / "a.txt").write_text("changed")
+    _git(tmp_path, ["-c", "user.name=Test", "-c", "user.email=test@example.com",
+                "commit", "-q", "-am", "change"])
+    _git(tmp_path, ["reset", "-q", "--hard", "HEAD~1"])
+
+    after = take_snapshot(str(tmp_path))
+    problems = compare(before, after)
+
+    assert len(problems) == 1
+    assert "reflog" in problems[0]
+
+
+def test_remote_to_config_is_caught(tmp_path):
+    make_repo(tmp_path)
+    before = take_snapshot(str(tmp_path))
+
+    _git(tmp_path, ["remote", "add", "origin", "https://example.com/x.git"])
+    
+    after = take_snapshot(str(tmp_path))
+    problems = compare(before, after)
+
+    assert len(problems) == 1
+    assert "config" in problems[0]
+
+    
+
 
 
