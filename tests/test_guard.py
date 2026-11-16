@@ -39,3 +39,31 @@ def test_different_repos_raise_value_error():
 
     with pytest.raises(ValueError, match="other_repo"):
         compare(BASE, after)
+
+
+def test_ref_changed_one_violation():
+    after = replace(BASE, refs={"main": "xyz"})
+
+    problems = compare(BASE, after)
+
+    assert len(problems) == 1
+    assert "refs" in problems[0]
+
+
+def test_config_hash_changed_one_violation():
+    after = replace(BASE, config_hash="s01")
+
+    problems = compare(BASE, after)
+
+    assert len(problems) == 1
+    assert "config_hash" in problems[0]
+
+
+def test_three_changes_are_three_violations():
+    after = replace(BASE, head="lll", refs={"main": "iop"}, reflog_len="7")
+
+    problems = compare(BASE, after)
+
+    assert len(problems) == 3
+
+
