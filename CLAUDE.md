@@ -1,3 +1,4 @@
 # Instructions for Claude
 
-Read `docs/design.md` before any work. Follow the builder rules in section 7 of that file on every ticket.
+The design is in `docs/design.md`. Read only the section a task points to.
+For a ticket, `spec.md` and its tests decide what to build.
