@@ -1,4 +1,4 @@
-base = "3cb3a8ccb9c4f6ddcc117afdf75812ad5c7c2e32"
+base = "98a4993cbd445d00eb7af7245aac28a5df80f6d8"
 test_cmd = "pytest"
 acceptance = ["tests/test_ticket.py"]
 touches = ["src/botkit/ticket.py"]
