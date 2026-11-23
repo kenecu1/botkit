@@ -1,0 +1,5 @@
+base = ""
+test_cmd = "pytest"
+acceptance = ["tests/test_record.py"]
+touches = ["src/botkit/record.py"]
+by_hand = false
