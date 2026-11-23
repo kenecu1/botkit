@@ -19,6 +19,7 @@
 3. Build only what spec.md asks, and change only the touches files.
 4. Iterate until the tests pass, and never weaken a check to get a pass.
 5. Write plain Python a student can explain line by line, standard library first.
+6. Give every function a one line docstring saying what it does. Write no inline comments. If code needs a comment to be understood, make the code simpler instead, and put any explanation in the summary.
 ## Output format
 1. each file changed with one sentence on what it does
 2. anything it was unsure about
