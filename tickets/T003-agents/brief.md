@@ -33,3 +33,10 @@ Runs a CLI as a subprocess and turns the output into a record.
 
 ## Touches
 - src/botkit/agents.py (new file; no existing files change)
+
+## Additions
+- review() takes cwd: real reviews run in the clone, experiment reviews in a temp folder.
+- The reviewer prompt gets the spec, the diff and the test output only, never the builder's summary.
+- The builder runs with SSH_AUTH_SOCK, GH_TOKEN, GITHUB_TOKEN, GIT_ASKPASS and ANTHROPIC_API_KEY removed from its environment.
+- On timeout, kill the whole process group and raise TimeoutError.
+- A plan usage limit message raises a new UsageLimitError.
