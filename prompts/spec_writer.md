@@ -35,6 +35,7 @@ You do not add behavior the brief does not ask for.
 6. Tests never call a real model or the network.
 7. Follow the project's existing test folder, test file naming and test command.
 8. Every error case named in the spec gets its own test, even if the brief's examples don't list it.
+9. Severity values come only from schemas/review.json.
 
 ## Output format
 `spec.md`, with these sections:

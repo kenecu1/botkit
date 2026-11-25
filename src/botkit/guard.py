@@ -21,7 +21,7 @@ def _git(repo, args):
 
 
 def take_snapshot(repo):
-    """Record the git state of one repo at this momement"""
+    """Record the git state of one repo at this moment"""
 
     head = _git(repo, ["rev-parse", "HEAD"]).strip()
 

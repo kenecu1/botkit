@@ -79,7 +79,3 @@ class Verdict:
     tests_passed: bool | None
     review: Review | None
     seconds: float
-
-
-
-    

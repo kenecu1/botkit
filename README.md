@@ -135,13 +135,15 @@ This is my thought process behind the main choices. The complete design is in [`
 
 - [x] Design finished after two full reviews ([`docs/design.md`](docs/design.md))
 - [x] Repo skeleton and CI
-- [ ] Shared data shapes and the guard, written by hand
-- [ ] Verify, agent adapters with a fake runner, sandbox, recorder
-- [ ] Single ticket pipeline, end to end
-- [ ] Status page for running tickets
-- [ ] Experiment harness: validation, runner, scorer
-- [ ] Experiment runs and results
-- [ ] Parallel runs with overlap checks
+- [x] Shared data shapes and the guard, written by hand
+- [x] Ticket reader
+- [x] Recorder
+- [ ] Verify, agent adapters with a fake runner, sandbox (planned)
+- [ ] Single ticket pipeline, end to end (planned)
+- [ ] Status page for running tickets (planned)
+- [ ] Experiment harness: validation, runner, scorer (planned)
+- [ ] Experiment runs and results (planned)
+- [ ] Parallel runs with overlap checks (planned)
 
 ## Run it
 

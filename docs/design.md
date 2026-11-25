@@ -125,7 +125,7 @@ Probes: `claude auth status` shows the plan login, `--safe-mode` together with `
 
 Fallback for reviewer B: if `--safe-mode` does not work with `-p`, use `--bare` with an API key from your linked Console organization. Your plan's monthly API credits cover that use.
 
-Review schema (merged): `summary` and `findings`. Each finding has `file`, `line_start`, `line_end`, `severity` (`bug`, `risk` or `nit`), `claim` and `evidence`. The verdict is computed in code: `defects` when at least one `bug` finding exists, otherwise `none`. The model is never asked for a verdict of its own.
+Review schema (merged): `summary` and `findings`. Each finding has `file`, `line_start`, `line_end`, `severity` (`bug` or `risk`), `claim` and `evidence`. The verdict is computed in code: `defects` when at least one `bug` finding exists, otherwise `none`. The model is never asked for a verdict of its own.
 
 `prompts/reviewer.md` must say (original):
 
