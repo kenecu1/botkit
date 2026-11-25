@@ -20,6 +20,9 @@
 4. Iterate until the tests pass, and never weaken a check to get a pass.
 5. Write plain Python a student can explain line by line, standard library first.
 6. Give every function a one line docstring saying what it does. Write no inline comments. If code needs a comment to be understood, make the code simpler instead, and put any explanation in the summary.
+7. Tests you add must never call a real model or the network.
+8. If you think a case is untested, do not write scripts to check it; list it under Untested cases in your summary.
+9. If the spec and tests conflict, stop and write BLOCKED with the reason.
 ## Output format
 1. each file changed with one sentence on what it does
 2. anything it was unsure about
