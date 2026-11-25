@@ -4,8 +4,8 @@
 Runs a CLI as a subprocess and turns the output into a record.
 
 ## Inputs
-- build: `clone_path`, `prompt`, `model`, `timeout`, `rules_path`, `runner` (fake runner gets passed in via a parameter, like subprocess.run or something). Builder runs in clone so it needs clone path.
-- review: `prompt`, `model`, `timeout`, `out_path`, `runner`. Brief, spec and patch are in prompt. `out_path` is pipeline's path.
+- build: `clone_path`, `prompt`, `model`, `timeout`, `rules_path`, `test_cmd`, `runner` (fake runner gets passed in via a parameter, like subprocess.run or something). Builder runs in clone so it needs clone path. `test_cmd` is the ticket's test command; the builder is only allowed to run that command (`--allowedTools "Bash(<test_cmd> *)"`).
+- review: `prompt`, `model`, `timeout`, `out_path`, `runner`. Spec, diff (the builder's patch) and test output are in prompt, never the builder's summary. `out_path` is pipeline's path.
 - Agent never reads ticket folder itself, that's for a different part.
 
 ## Outputs
