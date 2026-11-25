@@ -4,8 +4,8 @@
 Runs a CLI as a subprocess and turns the output into a record.
 
 ## Inputs
-- build: `clone_path`, `prompt`, `model`, `timeout`, `rules_path`, `runner` (fake runner gets passed in via a parameter, like subprocess.run or something). Builder runs in clone so it needs clone path.
-- review: `prompt`, `model`, `timeout`, `out_path`, `runner`. Brief, spec and patch are in prompt. `out_path` is pipeline's path.
+- build: `clone_path`, `prompt`, `model`, `timeout`, `rules_path`, `test_cmd`, `runner` (fake runner gets passed in via a parameter, like subprocess.run or something). Builder runs in clone so it needs clone path. `test_cmd` is the ticket's test command; the builder is only allowed to run that command (`--allowedTools "Bash(<test_cmd> *)"`).
+- review: `prompt`, `model`, `timeout`, `out_path`, `runner`. Spec, diff (the builder's patch) and test output are in prompt, never the builder's summary. `out_path` is pipeline's path.
 - Agent never reads ticket folder itself, that's for a different part.
 
 ## Outputs
@@ -13,7 +13,7 @@ Runs a CLI as a subprocess and turns the output into a record.
 - review calls codex through the cli and returns a tuple of AgentResult and Review records, or None.
 - Raise if it can't continue, return None when it can continue without it.
 - Build timeout: kill the group because it will have to start all over, raise `TimeoutError` listing the problem and where it occurred.
-- Usage limit (build or review): raise `TimeoutError`, because it literally cannot continue no matter what.
+- Usage limit (build or review): raise `UsageLimitError`, because it literally cannot continue no matter what.
 - Review crash or timeout: save raw output to pipeline's path, return None without raising, since review comes after the test run.
 - Removing `SSH_AUTH_SOCK`, git token variables and `ANTHROPIC_API_KEY` from the builder's environment is agents' job, since it's the code that starts the process.
 
@@ -33,3 +33,10 @@ Runs a CLI as a subprocess and turns the output into a record.
 
 ## Touches
 - src/botkit/agents.py (new file; no existing files change)
+
+## Additions
+- review() takes cwd: real reviews run in the clone, experiment reviews in a temp folder.
+- The reviewer prompt gets the spec, the diff and the test output only, never the builder's summary.
+- The builder runs with SSH_AUTH_SOCK, GH_TOKEN, GITHUB_TOKEN, GIT_ASKPASS and ANTHROPIC_API_KEY removed from its environment.
+- On timeout, kill the whole process group and raise TimeoutError.
+- A plan usage limit message raises a new UsageLimitError.
