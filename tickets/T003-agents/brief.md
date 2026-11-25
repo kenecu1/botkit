@@ -13,7 +13,7 @@ Runs a CLI as a subprocess and turns the output into a record.
 - review calls codex through the cli and returns a tuple of AgentResult and Review records, or None.
 - Raise if it can't continue, return None when it can continue without it.
 - Build timeout: kill the group because it will have to start all over, raise `TimeoutError` listing the problem and where it occurred.
-- Usage limit (build or review): raise `TimeoutError`, because it literally cannot continue no matter what.
+- Usage limit (build or review): raise `UsageLimitError`, because it literally cannot continue no matter what.
 - Review crash or timeout: save raw output to pipeline's path, return None without raising, since review comes after the test run.
 - Removing `SSH_AUTH_SOCK`, git token variables and `ANTHROPIC_API_KEY` from the builder's environment is agents' job, since it's the code that starts the process.
 
