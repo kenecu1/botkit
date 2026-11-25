@@ -1,5 +1,7 @@
 # T001 ticket explain
 
+Tier: B (bootstrap ticket, interface level explain)
+
 ## src/botkit/ticket.py
 - Has one main read_ticket function that opens a ticket_folder path and reads in each part of the folder into the necessary variable. The helper functions are called to verify types and raise necessary errors. Then it uses those variables to fill in a record Ticket.
 
