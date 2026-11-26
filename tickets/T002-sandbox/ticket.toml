@@ -1,0 +1,5 @@
+base = ""
+test_cmd = "pytest"
+acceptance = ["tests/test_sandbox.py"]
+touches = ["src/botkit/sandbox.py"]
+by_hand = false
