@@ -1,0 +1,5 @@
+base = ""
+test_cmd = "pytest"
+acceptance = ["tests/test_verify.py"]
+touches = ["src/botkit/verify.py"]
+by_hand = false
